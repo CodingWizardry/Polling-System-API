@@ -1,0 +1,306 @@
+openapi: 3.0.0
+info: 
+  title: Polling System API
+  description: an open api for polling system - mudit
+  version: 1.0.0
+
+servers:
+  - url: https://polling-system-api.onrender.com/
+    description: live url hosted on render
+  
+
+
+paths:
+  /:
+    get:
+      tags: 
+        - Home
+      summary: returns a greet message from polling system api
+      responses: 
+        200: # status code       
+          description: All good success
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: "mystring"
+
+  /questions/create:
+    post:
+      tags:
+        - Question
+      summary: creates question. required file is - title
+      requestBody: 
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: 
+                - title
+              properties:
+                title:
+                  type: string
+                  required: true            
+      responses: 
+        200:      
+          description: All good success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties: 
+                  success:
+                    type: boolean
+                  question:
+                    type: object
+                    properties:
+                      title: 
+                        type: string
+                      options: 
+                        schema:
+                          type: array
+                        items:
+                          type: string
+                      totalVotes:
+                        type: number
+                      _id:
+                        type: string
+                      createdAt: 
+                        type: string
+                      updatedAt: 
+                        type: string
+        400:
+          description: Bad request
+        500: 
+          description: internal server error
+
+  /questions/{id}/options/create:
+    post:
+      tags:
+        - Question
+      summary: add option to a specific question, based on passed question id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody: 
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: 
+                - text
+              properties:
+                text:
+                  type: string
+                  required: true            
+      responses: 
+        200:      
+          description: All good success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties: 
+                  success:
+                    type: boolean
+                  option:
+                    type: object
+                    properties:
+                      text: 
+                        type: string
+                      votes: 
+                        type: number
+                      question:
+                        type: object
+                        properties:
+                          title: 
+                            type: string
+                          options: 
+                            schema:
+                              type: array
+                            items:
+                              type: string
+                          totalVotes:
+                            type: number
+                          _id:
+                            type: string
+                          createdAt: 
+                            type: string
+                          updatedAt: 
+                            type: string
+                      _id:
+                        type: string
+                      createdAt: 
+                        type: string
+                      updatedAt: 
+                        type: string
+                      link_to_vote:
+                        type: string                     
+        400:
+          description: Bad request
+        500: 
+          description: internal server error
+
+  /questions/{id}/delete:
+    delete:
+      tags:
+        - Question
+      summary: delete a question, based on passed question id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string            
+      responses: 
+        200:      
+          description: All good success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties: 
+                  success:
+                    type: boolean
+                  message:
+                    type: string                      
+        400:
+          description: Bad request
+        500: 
+          description: internal server error
+
+  /options/{id}/delete:
+    delete:
+      tags:
+        - Option
+      summary: delete an option, based on passed option id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string            
+      responses: 
+        200:      
+          description: All good success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties: 
+                  success:
+                    type: boolean
+                  message:
+                    type: string                      
+        400:
+          description: Bad request
+        500: 
+          description: internal server error
+                    
+  /options/{id}/add_vote:
+    put:
+      tags:
+        - Option
+      summary: increase vote by one of option, based on passed option id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string            
+      responses: 
+        200:      
+          description: All good success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties: 
+                  success:
+                    type: boolean
+                  option:
+                    type: object
+                    properties:
+                      text: 
+                        type: string
+                      votes: 
+                        type: number
+                      question:
+                        type: string
+                      _id:
+                        type: string
+                      createdAt: 
+                        type: string
+                      updatedAt: 
+                        type: string
+                      link_to_vote:
+                        type: string                     
+        400:
+          description: Bad request
+        500: 
+          description: internal server error
+                  
+  /questions/{id}:
+    get:
+        tags:
+          - Question
+        summary: returns a question with its options. 
+        parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string            
+        responses: 
+          200:      
+            description: All good success
+            content:
+              application/json:
+                schema: 
+                  type: object
+                  properties: 
+                    success:
+                      type: boolean
+                    question:
+                      type: object
+                      properties:
+                        _id: 
+                          type: string
+                        title:
+                          type: text
+                        options: 
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              _id:
+                                type: string
+                              text: 
+                                type: string
+                              votes:
+                                type: number
+                              question:
+                                type: string
+                              createdAt:
+                                type: string
+                              updatedAt:
+                                type: string
+                              link_to_vote:
+                                type: string
+                    totalVotes:
+                      type: number
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string  
+
+          400:
+            description: Bad request
+          500: 
+            description: internal server error
+
